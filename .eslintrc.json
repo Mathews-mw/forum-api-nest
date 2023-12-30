@@ -1,0 +1,29 @@
+{
+  "extends": ["@rocketseat/eslint-config/node", "plugin:vitest-globals/recommended"],
+  "env": {
+    "vitest-globals/env": true
+  },
+  "rules": {
+    "prettier/prettier": ["error", {
+      "singleQuote": true,
+      "printWidth": 190,
+      "tabWidth": 2,
+      "useTabs": true,
+      "semi": true,
+      "jsxSingleQuote": true,
+      "trailingComma": "es5",
+      "bracketSpacing": true,
+      "arrowFunctionParens": "always",
+      "bracketLine": true,
+      "endOfLine": "auto"
+    }],
+    "no-undef": "off",
+    "camelcase": "off",
+    "no-unused-vars": "off",
+    "no-useless-constructor": "off",
+    "no-empty-function": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-empty-function": "warn",
+    "no-new": "off"
+  }
+}
