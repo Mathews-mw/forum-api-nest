@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 
-import { Env } from 'src/env';
+import { Env } from '@/infra/env';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({

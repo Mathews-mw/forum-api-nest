@@ -15,7 +15,7 @@ export interface QuestionProps {
 	attachments: QuestionAttachmentList;
 	content: string;
 	createdAt: Date;
-	updatedAt?: Date;
+	updatedAt?: Date | null;
 }
 
 export class Question extends AggregateRoot<QuestionProps> {
@@ -27,8 +27,24 @@ export class Question extends AggregateRoot<QuestionProps> {
 		return this.props.bestAnswerId;
 	}
 
+	set bestAnswerId(bestAnswerId: UniqueEntityId | undefined) {
+		if (bestAnswerId && bestAnswerId !== this.props.bestAnswerId) {
+			this.addDomainEvent(new QuestBestAnswerChoseEvent(this, bestAnswerId));
+		}
+
+		this.props.bestAnswerId = bestAnswerId;
+		this.touch();
+	}
+
 	get title() {
 		return this.props.title;
+	}
+
+	set title(title: string) {
+		this.props.title = title;
+		this.props.slug = Slug.createFromText(title);
+
+		this.touch();
 	}
 
 	get slug() {
@@ -39,8 +55,18 @@ export class Question extends AggregateRoot<QuestionProps> {
 		return this.props.content;
 	}
 
+	set content(content: string) {
+		this.props.content = content;
+		this.touch();
+	}
+
 	get attachments() {
 		return this.props.attachments;
+	}
+
+	set attachments(attachments: QuestionAttachmentList) {
+		this.props.attachments = attachments;
+		this.touch();
 	}
 
 	get createdAt() {
@@ -61,32 +87,6 @@ export class Question extends AggregateRoot<QuestionProps> {
 
 	private touch() {
 		this.props.updatedAt = new Date();
-	}
-
-	set bestAnswerId(bestAnswerId: UniqueEntityId | undefined) {
-		if (bestAnswerId && bestAnswerId !== this.props.bestAnswerId) {
-			this.addDomainEvent(new QuestBestAnswerChoseEvent(this, bestAnswerId));
-		}
-
-		this.props.bestAnswerId = bestAnswerId;
-		this.touch();
-	}
-
-	set title(title: string) {
-		this.props.title = title;
-		this.props.slug = Slug.createFromText(title);
-
-		this.touch();
-	}
-
-	set content(content: string) {
-		this.props.content = content;
-		this.touch();
-	}
-
-	set attachments(attachments: QuestionAttachmentList) {
-		this.props.attachments = attachments;
-		this.touch();
 	}
 
 	static create(props: Optional<QuestionProps, 'createdAt' | 'slug' | 'attachments'>, id?: UniqueEntityId) {
