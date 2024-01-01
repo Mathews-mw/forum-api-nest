@@ -1,11 +1,10 @@
 import { z } from 'zod';
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 
 import { UserPayload } from '@/infra/auth/jwt.strategy';
-import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { CurrentUser } from '@/infra/auth/current-user-decorator';
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation.pipe';
+import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/create-question-use-case';
 
 const createQuestionBodySchema = z.object({
 	title: z.string(),
@@ -17,33 +16,23 @@ type CreateQuestionBodySchema = z.infer<typeof createQuestionBodySchema>;
 const bodyValidationPipe = new ZodValidationPipe(createQuestionBodySchema);
 
 @Controller('/questions')
-@UseGuards(JwtAuthGuard)
 export class CreateQuestionController {
-	constructor(private prisma: PrismaService) {}
+	constructor(private createQuestion: CreateQuestionUseCase) {}
 
 	@Post()
 	async handle(@Body(bodyValidationPipe) body: CreateQuestionBodySchema, @CurrentUser() user: UserPayload) {
 		const { content, title } = body;
 		const userId = user.sub;
 
-		const slug = this.convertToSlug(title);
-
-		await this.prisma.question.create({
-			data: {
-				authorId: userId,
-				title,
-				content,
-				slug,
-			},
+		const result = await this.createQuestion.execute({
+			title,
+			content,
+			authorId: userId,
+			attachmentsIds: [],
 		});
-	}
 
-	private convertToSlug(title: string) {
-		return title
-			.toLowerCase()
-			.normalize('NFD')
-			.replace(/[\u0300-\u036f]/g, '')
-			.replace(/[^\w\s-]/g, '')
-			.replace(/\s+/g, '-');
+		if (result.isFalse()) {
+			throw new BadRequestException();
+		}
 	}
 }
