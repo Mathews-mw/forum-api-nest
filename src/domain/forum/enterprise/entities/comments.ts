@@ -5,7 +5,7 @@ export interface CommentProps {
 	authorId: UniqueEntityId;
 	content: string;
 	createdAt: Date;
-	updatedAt?: Date;
+	updatedAt?: Date | null;
 }
 
 export abstract class Comment<Props extends CommentProps> extends Entity<Props> {
@@ -15,6 +15,11 @@ export abstract class Comment<Props extends CommentProps> extends Entity<Props> 
 
 	get content() {
 		return this.props.content;
+	}
+
+	set content(content: string) {
+		this.props.content = content;
+		this.touch();
 	}
 
 	get createdAt() {
@@ -27,10 +32,5 @@ export abstract class Comment<Props extends CommentProps> extends Entity<Props> 
 
 	private touch() {
 		this.props.updatedAt = new Date();
-	}
-
-	set content(content: string) {
-		this.props.content = content;
-		this.touch();
 	}
 }
