@@ -7,7 +7,7 @@ import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 import { QuestionAttachmentList } from './question-attachment-list';
 import { QuestBestAnswerChoseEvent } from '../events/quest-best-answer-chosen-event';
 
-export interface QuestionProps {
+export interface IQuestionProps {
 	authorId: UniqueEntityId;
 	bestAnswerId?: UniqueEntityId | null;
 	title: string;
@@ -18,7 +18,7 @@ export interface QuestionProps {
 	updatedAt?: Date | null;
 }
 
-export class Question extends AggregateRoot<QuestionProps> {
+export class Question extends AggregateRoot<IQuestionProps> {
 	get authorId() {
 		return this.props.authorId;
 	}
@@ -89,7 +89,7 @@ export class Question extends AggregateRoot<QuestionProps> {
 		this.props.updatedAt = new Date();
 	}
 
-	static create(props: Optional<QuestionProps, 'createdAt' | 'slug' | 'attachments'>, id?: UniqueEntityId) {
+	static create(props: Optional<IQuestionProps, 'createdAt' | 'slug' | 'attachments'>, id?: UniqueEntityId) {
 		const question = new Question(
 			{
 				...props,

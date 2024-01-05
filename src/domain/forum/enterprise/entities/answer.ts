@@ -4,7 +4,7 @@ import { AnswerAttachmentList } from './answer-attachments-list';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 import { AnswerCreatedEvent } from '../events/answer-created-event';
 
-export interface AnswerProps {
+export interface IAnswerProps {
 	authorId: UniqueEntityId;
 	questionId: UniqueEntityId;
 	content: string;
@@ -13,7 +13,7 @@ export interface AnswerProps {
 	updatedAt?: Date | null;
 }
 
-export class Answer extends AggregateRoot<AnswerProps> {
+export class Answer extends AggregateRoot<IAnswerProps> {
 	get authorId() {
 		return this.props.authorId;
 	}
@@ -56,7 +56,7 @@ export class Answer extends AggregateRoot<AnswerProps> {
 		this.props.updatedAt = new Date();
 	}
 
-	static create(props: Optional<AnswerProps, 'createdAt' | 'attachments'>, id?: UniqueEntityId) {
+	static create(props: Optional<IAnswerProps, 'createdAt' | 'attachments'>, id?: UniqueEntityId) {
 		const answer = new Answer(
 			{
 				...props,

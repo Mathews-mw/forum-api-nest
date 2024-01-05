@@ -2,16 +2,16 @@ import { Optional } from '@/core/types/optional';
 import { Comment, CommentProps } from './comments';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 
-export interface AnswerCommentProps extends CommentProps {
+export interface IAnswerCommentProps extends CommentProps {
 	answerId: UniqueEntityId;
 }
 
-export class AnswerComment extends Comment<AnswerCommentProps> {
+export class AnswerComment extends Comment<IAnswerCommentProps> {
 	get answerId() {
 		return this.props.answerId;
 	}
 
-	static create(props: Optional<AnswerCommentProps, 'createdAt'>, id?: UniqueEntityId) {
+	static create(props: Optional<IAnswerCommentProps, 'createdAt'>, id?: UniqueEntityId) {
 		const answerComment = new AnswerComment(
 			{
 				...props,

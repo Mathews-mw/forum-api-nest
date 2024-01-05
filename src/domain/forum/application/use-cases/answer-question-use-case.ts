@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common';
+
 import { Either, success } from '@/core/either';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 import { Answer } from '@/domain/forum/enterprise/entities/answer';
@@ -6,7 +8,7 @@ import { IAnswerRepository } from '../repositories/implementations/IAnswerReposi
 import { AnswerAttachmentList } from '../../enterprise/entities/answer-attachments-list';
 
 interface AnswerQuestionUseCaseRequest {
-	instructorId: string;
+	authorId: string;
 	questionId: string;
 	content: string;
 	attachmentsIds: string[];
@@ -19,12 +21,13 @@ type AnswerQuestionUseCaseResponse = Either<
 	}
 >;
 
+@Injectable()
 export class AnswerQuestionUseCase {
 	constructor(private answerRepository: IAnswerRepository) {}
 
-	async execute({ questionId, content, instructorId, attachmentsIds }: AnswerQuestionUseCaseRequest): Promise<AnswerQuestionUseCaseResponse> {
+	async execute({ questionId, content, authorId, attachmentsIds }: AnswerQuestionUseCaseRequest): Promise<AnswerQuestionUseCaseResponse> {
 		const answer = Answer.create({
-			authorId: new UniqueEntityId(instructorId),
+			authorId: new UniqueEntityId(authorId),
 			questionId: new UniqueEntityId(questionId),
 			content,
 		});
