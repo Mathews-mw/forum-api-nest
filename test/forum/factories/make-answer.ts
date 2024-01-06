@@ -24,7 +24,7 @@ export function makeAnswer(override: Partial<IAnswerProps> = {}, id?: UniqueEnti
 export class AnswerFactory {
 	constructor(private prisma: PrismaService) {}
 
-	async makePrismaQuestion(data: Partial<IAnswerProps> = {}): Promise<Answer> {
+	async makePrismaAnswer(data: Partial<IAnswerProps> = {}): Promise<Answer> {
 		const answer = makeAnswer(data);
 
 		await this.prisma.answer.create({

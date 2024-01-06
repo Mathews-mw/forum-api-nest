@@ -4,6 +4,7 @@ import { NotallowedError } from '../../../../core/errors/not-allowed-error';
 import { ResourceNotfounError } from '@/core/errors/resource-not-found-error';
 import { IAnswerRepository } from '../repositories/implementations/IAnswerRepository';
 import { IQuestionRepository } from '../repositories/implementations/IQuestionRepository';
+import { Injectable } from '@nestjs/common';
 
 interface ChooseQuestionBestAnswerUseCaseRequest {
 	authorId: string;
@@ -17,6 +18,7 @@ type ChooseQuestionBestAnswerUseCaseResponse = Either<
 	}
 >;
 
+@Injectable()
 export class ChooseQuestionBestAnswerUseCase {
 	constructor(
 		private questionRepository: IQuestionRepository,
