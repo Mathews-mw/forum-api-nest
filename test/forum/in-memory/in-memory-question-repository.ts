@@ -2,15 +2,17 @@ import { DomainEvents } from '@/core/events/domain-events';
 import { Question } from '@/domain/forum/enterprise/entities/question';
 import { PaginationParams } from '@/core/repositories/pagination-params';
 import { IQuestionRepository } from '@/domain/forum/application/repositories/implementations/IQuestionRepository';
-import { IQuestionAttchmentsRepository } from '@/domain/forum/application/repositories/implementations/IQuestionAttchmentsRepository';
+import { IQuestionAttachmentsRepository } from '@/domain/forum/application/repositories/implementations/IQuestionAttchmentsRepository';
 
 export class InMemoryQuestionRepository implements IQuestionRepository {
 	public items: Question[] = [];
 
-	constructor(private questionattachmentsRepository: IQuestionAttchmentsRepository) {}
+	constructor(private questionattachmentsRepository: IQuestionAttachmentsRepository) {}
 
 	async create(question: Question): Promise<void> {
 		this.items.push(question);
+
+		await this.questionattachmentsRepository.createMany(question.attachments.getItems());
 
 		DomainEvents.dispatchEventsForAggregate(question.id);
 	}
@@ -19,6 +21,9 @@ export class InMemoryQuestionRepository implements IQuestionRepository {
 		const questionIndex = this.items.findIndex((item) => item.id === question.id);
 
 		this.items[questionIndex] = question;
+
+		await this.questionattachmentsRepository.createMany(question.attachments.getNewItems());
+		await this.questionattachmentsRepository.deleteMany(question.attachments.getRemovedItems());
 
 		DomainEvents.dispatchEventsForAggregate(question.id);
 	}

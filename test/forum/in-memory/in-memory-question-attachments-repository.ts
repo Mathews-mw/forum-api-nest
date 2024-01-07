@@ -1,7 +1,19 @@
 import { QuestionAttachment } from '@/domain/forum/enterprise/entities/question-attachment';
-import { IQuestionAttchmentsRepository } from '@/domain/forum/application/repositories/implementations/IQuestionAttchmentsRepository';
+import { IQuestionAttachmentsRepository } from '@/domain/forum/application/repositories/implementations/IQuestionAttchmentsRepository';
 
-export class InMemoryQestionAttachmentsRepository implements IQuestionAttchmentsRepository {
+export class InMemoryQestionAttachmentsRepository implements IQuestionAttachmentsRepository {
+	async createMany(attachments: QuestionAttachment[]): Promise<void> {
+		this.items.push(...attachments);
+	}
+
+	async deleteMany(attachments: QuestionAttachment[]): Promise<void> {
+		const questionAttchments = this.items.filter((item) => {
+			return !attachments.some((attachment) => attachment.equals(item));
+		});
+
+		this.items = questionAttchments;
+	}
+
 	public items: QuestionAttachment[] = [];
 
 	async findManyByQuestionId(questionId: string) {

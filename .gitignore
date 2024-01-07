@@ -38,3 +38,4 @@ data
 
 # ENV
 .env
+.env.test

@@ -1,10 +1,11 @@
+import { Injectable } from '@nestjs/common';
+
 import { Either, failure, success } from '@/core/either';
 import { Question } from '../../enterprise/entities/question';
 import { NotallowedError } from '../../../../core/errors/not-allowed-error';
 import { ResourceNotfounError } from '@/core/errors/resource-not-found-error';
 import { IAnswerRepository } from '../repositories/implementations/IAnswerRepository';
 import { IQuestionRepository } from '../repositories/implementations/IQuestionRepository';
-import { Injectable } from '@nestjs/common';
 
 interface ChooseQuestionBestAnswerUseCaseRequest {
 	authorId: string;

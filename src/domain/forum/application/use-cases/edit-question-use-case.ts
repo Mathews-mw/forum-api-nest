@@ -8,7 +8,7 @@ import { ResourceNotfounError } from '@/core/errors/resource-not-found-error';
 import { IQuestionRepository } from '../repositories/implementations/IQuestionRepository';
 import { QuestionAttachment } from '@/domain/forum/enterprise/entities/question-attachment';
 import { QuestionAttachmentList } from '@/domain/forum/enterprise/entities/question-attachment-list';
-import { IQuestionAttchmentsRepository } from '../repositories/implementations/IQuestionAttchmentsRepository';
+import { IQuestionAttachmentsRepository } from '../repositories/implementations/IQuestionAttchmentsRepository';
 
 interface EditQuestionUseCaseRequest {
 	authorId: string;
@@ -29,7 +29,7 @@ type EditQuestionUseCaseResponse = Either<
 export class EditQuestionUseCase {
 	constructor(
 		private questionRepository: IQuestionRepository,
-		private questionAttachmentsRepository: IQuestionAttchmentsRepository
+		private questionAttachmentsRepository: IQuestionAttachmentsRepository
 	) {}
 
 	async execute({ authorId, questionId, title, content, attachmentsIds }: EditQuestionUseCaseRequest): Promise<EditQuestionUseCaseResponse> {

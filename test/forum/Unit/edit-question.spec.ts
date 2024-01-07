@@ -32,7 +32,13 @@ describe('Edit Question', () => {
 			})
 		);
 
-		await editQuestionUseCase.execute({ authorId: 'author-1', questionId: newQuestion.id.toValue(), title: 'Título modificado', content: 'Conteudo modificado', attachmentsIds: ['1', '3'] });
+		await editQuestionUseCase.execute({
+			authorId: 'author-1',
+			questionId: newQuestion.id.toValue(),
+			title: 'Título modificado',
+			content: 'Conteudo modificado',
+			attachmentsIds: ['1', '3'],
+		});
 
 		expect(questionRepository.items[0]).toMatchObject({
 			title: 'Título modificado',
@@ -51,7 +57,51 @@ describe('Edit Question', () => {
 		await questionRepository.create(newQuestion);
 
 		expect(() => {
-			return editQuestionUseCase.execute({ authorId: 'author-2', questionId: newQuestion.id.toValue(), title: 'Título modificado', content: 'Conteudo modificado', attachmentsIds: [] });
+			return editQuestionUseCase.execute({
+				authorId: 'author-2',
+				questionId: newQuestion.id.toValue(),
+				title: 'Título modificado',
+				content: 'Conteudo modificado',
+				attachmentsIds: [],
+			});
 		}).rejects.toBeInstanceOf(Error);
+	});
+
+	it('Should sync new and removed attachments when editing a question', async () => {
+		const newQuestion = makeQuestion({ authorId: new UniqueEntityId('author-1') }, new UniqueEntityId('question-1'));
+
+		await questionRepository.create(newQuestion);
+
+		questionAttachmentsRepository.items.push(
+			makeQuestionAttachment({
+				questionId: newQuestion.id,
+				attachmentId: new UniqueEntityId('1'),
+			}),
+			makeQuestionAttachment({
+				questionId: newQuestion.id,
+				attachmentId: new UniqueEntityId('2'),
+			})
+		);
+
+		const result = await editQuestionUseCase.execute({
+			authorId: 'author-1',
+			questionId: newQuestion.id.toValue(),
+			title: 'Título modificado',
+			content: 'Conteudo modificado',
+			attachmentsIds: ['1', '3'],
+		});
+
+		expect(result.isSucces()).toBe(true);
+		expect(questionAttachmentsRepository.items).toHaveLength(2);
+		expect(questionAttachmentsRepository.items).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					attachmentId: new UniqueEntityId('1'),
+				}),
+				expect.objectContaining({
+					attachmentId: new UniqueEntityId('3'),
+				}),
+			])
+		);
 	});
 });

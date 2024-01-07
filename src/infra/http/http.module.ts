@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { StorageModule } from '../storage/storage.module';
 import { DatabaseModule } from '../database/databbase.module';
 import { CryptographyModule } from '../cryptography/cryptography.module';
 
@@ -31,6 +32,7 @@ import { AnswerQuestionController } from './controllers/answer-question.controll
 import { CreateQuestionController } from './controllers/create-question.controller';
 import { DeleteQuestionController } from './controllers/delete-question.controller';
 import { CommentOnAnswerController } from './controllers/comment-on-answer.controller';
+import { UploadAttachmentController } from './controllers/upload-attachment.controller';
 import { CommentOnquestionController } from './controllers/comment-on-question.controller';
 import { GetQuestionBySlugController } from './controllers/get-question-by-slug.controller';
 import { DeleteAnswerCommentController } from './controllers/delete-answer-comment.controller';
@@ -42,7 +44,7 @@ import { FetchQuestionCommentsController } from './controllers/fetch-question-co
 import { ChooseQuestionBestAnswerController } from './controllers/choose-question-best-answer.controller';
 
 @Module({
-	imports: [DatabaseModule, CryptographyModule],
+	imports: [DatabaseModule, CryptographyModule, StorageModule],
 	controllers: [
 		CreateAccountController,
 		AuthenticateController,
@@ -62,6 +64,7 @@ import { ChooseQuestionBestAnswerController } from './controllers/choose-questio
 		CommentOnAnswerController,
 		DeleteAnswerCommentController,
 		FetchAnswerCommentsController,
+		UploadAttachmentController,
 	],
 	providers: [
 		RegisterStudentUseCase,
