@@ -53,4 +53,41 @@ describe('Edit Answer', () => {
 			return editAnswerUseCase.execute({ authorId: 'author-2', answerId: newAnswer.id.toValue(), content: 'Conteudo modificado', attachmentsIds: [] });
 		}).rejects.toBeInstanceOf(Error);
 	});
+
+	it('Should sync new and removed attachments when editing a answer', async () => {
+		const newAnswer = makeAnswer({ authorId: new UniqueEntityId('author-1') }, new UniqueEntityId('question-1'));
+
+		await answerRepository.create(newAnswer);
+
+		answerAttachmentsRepository.items.push(
+			makeAnswerAttachment({
+				answerId: newAnswer.id,
+				attachmentId: new UniqueEntityId('1'),
+			}),
+			makeAnswerAttachment({
+				answerId: newAnswer.id,
+				attachmentId: new UniqueEntityId('2'),
+			})
+		);
+
+		const result = await editAnswerUseCase.execute({
+			authorId: 'author-1',
+			answerId: newAnswer.id.toString(),
+			content: 'Conteudo modificado',
+			attachmentsIds: ['1', '3'],
+		});
+
+		expect(result.isSucces()).toBe(true);
+		expect(answerAttachmentsRepository.items).toHaveLength(2);
+		expect(answerAttachmentsRepository.items).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					attachmentId: new UniqueEntityId('1'),
+				}),
+				expect.objectContaining({
+					attachmentId: new UniqueEntityId('3'),
+				}),
+			])
+		);
+	});
 });
