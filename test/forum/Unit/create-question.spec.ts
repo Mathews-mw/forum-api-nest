@@ -2,15 +2,21 @@ import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 import { InMemoryQuestionRepository } from '../in-memory/in-memory-question-repository';
 import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/create-question-use-case';
 import { InMemoryQestionAttachmentsRepository } from '../in-memory/in-memory-question-attachments-repository';
+import { InMemoryStudentsRepository } from '../in-memory/in-memory-students-repository';
+import { InMemoryAttachmentsRepository } from '../in-memory/in-memmory-attachments-repository';
 
 let questionAttachmentsRepository: InMemoryQestionAttachmentsRepository;
 let questionRepository: InMemoryQuestionRepository;
 let createQuestionUseCase: CreateQuestionUseCase;
+let studentsRepository: InMemoryStudentsRepository;
+let attachmentRepository: InMemoryAttachmentsRepository;
 
 describe('Create Question', () => {
 	beforeEach(() => {
+		studentsRepository = new InMemoryStudentsRepository();
+		attachmentRepository = new InMemoryAttachmentsRepository();
 		questionAttachmentsRepository = new InMemoryQestionAttachmentsRepository();
-		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository);
+		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository, attachmentRepository, studentsRepository);
 		createQuestionUseCase = new CreateQuestionUseCase(questionRepository);
 	});
 

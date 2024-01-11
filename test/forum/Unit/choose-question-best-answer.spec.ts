@@ -3,12 +3,16 @@ import { makeQuestion } from '../factories/make-question';
 import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 import { InMemoryAnswerRepository } from '../in-memory/in-memory-answer-repository';
 import { InMemoryQuestionRepository } from '../in-memory/in-memory-question-repository';
+import { InMemoryStudentsRepository } from '../in-memory/in-memory-students-repository';
+import { InMemoryAttachmentsRepository } from '../in-memory/in-memmory-attachments-repository';
 import { InMemoryAnswerAttachmentsRepository } from '../in-memory/in-memory-answer-attachments-repository';
 import { InMemoryQestionAttachmentsRepository } from '../in-memory/in-memory-question-attachments-repository';
 import { ChooseQuestionBestAnswerUseCase } from '@/domain/forum/application/use-cases/choose-question-best-answer-use-case';
 
 let answerRepository: InMemoryAnswerRepository;
 let questionRepository: InMemoryQuestionRepository;
+let studentsRepository: InMemoryStudentsRepository;
+let attachmentsRepository: InMemoryAttachmentsRepository;
 let answerAttachmentsRepository: InMemoryAnswerAttachmentsRepository;
 let chooseQuestionBestAnswerUseCase: ChooseQuestionBestAnswerUseCase;
 let questionAttachmentsRepository: InMemoryQestionAttachmentsRepository;
@@ -17,9 +21,11 @@ describe('Choose Question Best Answer', () => {
 	beforeEach(() => {
 		answerAttachmentsRepository = new InMemoryAnswerAttachmentsRepository();
 		questionAttachmentsRepository = new InMemoryQestionAttachmentsRepository();
+		studentsRepository = new InMemoryStudentsRepository();
+		attachmentsRepository = new InMemoryAttachmentsRepository();
 		answerRepository = new InMemoryAnswerRepository(answerAttachmentsRepository);
-		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository);
 		chooseQuestionBestAnswerUseCase = new ChooseQuestionBestAnswerUseCase(questionRepository, answerRepository);
+		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository, attachmentsRepository, studentsRepository);
 	});
 
 	test('Should be able to choose the quest best answer', async () => {

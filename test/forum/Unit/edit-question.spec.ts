@@ -4,15 +4,21 @@ import { makeQuestionAttachment } from '../factories/make-question-attachment';
 import { InMemoryQuestionRepository } from '../in-memory/in-memory-question-repository';
 import { EditQuestionUseCase } from '@/domain/forum/application/use-cases/edit-question-use-case';
 import { InMemoryQestionAttachmentsRepository } from '../in-memory/in-memory-question-attachments-repository';
+import { InMemoryStudentsRepository } from '../in-memory/in-memory-students-repository';
+import { InMemoryAttachmentsRepository } from '../in-memory/in-memmory-attachments-repository';
 
 let editQuestionUseCase: EditQuestionUseCase;
 let questionRepository: InMemoryQuestionRepository;
 let questionAttachmentsRepository: InMemoryQestionAttachmentsRepository;
+let studentsRepository: InMemoryStudentsRepository;
+let attachmentRepository: InMemoryAttachmentsRepository;
 
 describe('Edit Question', () => {
 	beforeEach(() => {
+		studentsRepository = new InMemoryStudentsRepository();
+		attachmentRepository = new InMemoryAttachmentsRepository();
 		questionAttachmentsRepository = new InMemoryQestionAttachmentsRepository();
-		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository);
+		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository, attachmentRepository, studentsRepository);
 		editQuestionUseCase = new EditQuestionUseCase(questionRepository, questionAttachmentsRepository);
 	});
 

@@ -2,13 +2,16 @@ import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 import { makeQuestionComments } from '../factories/make-question-comments';
 import { InMemmoryQuestionCommentsRepository } from '../in-memory/in-memmory-question-comments-repository';
 import { DeleteQuestionCommentUseCase } from '@/domain/forum/application/use-cases/delete-question-comment';
+import { InMemoryStudentsRepository } from '../in-memory/in-memory-students-repository';
 
 let deleteCommentQuestionUseCase: DeleteQuestionCommentUseCase;
 let questionCommentRepository: InMemmoryQuestionCommentsRepository;
+let studentsRepository: InMemoryStudentsRepository;
 
 describe('Delete comment question', () => {
 	beforeEach(() => {
-		questionCommentRepository = new InMemmoryQuestionCommentsRepository();
+		studentsRepository = new InMemoryStudentsRepository();
+		questionCommentRepository = new InMemmoryQuestionCommentsRepository(studentsRepository);
 		deleteCommentQuestionUseCase = new DeleteQuestionCommentUseCase(questionCommentRepository);
 	});
 

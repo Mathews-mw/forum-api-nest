@@ -4,15 +4,21 @@ import { makeQuestionAttachment } from '../factories/make-question-attachment';
 import { InMemoryQuestionRepository } from '../in-memory/in-memory-question-repository';
 import { DeleteQuestionUseCase } from '@/domain/forum/application/use-cases/delete-question';
 import { InMemoryQestionAttachmentsRepository } from '../in-memory/in-memory-question-attachments-repository';
+import { InMemoryStudentsRepository } from '../in-memory/in-memory-students-repository';
+import { InMemoryAttachmentsRepository } from '../in-memory/in-memmory-attachments-repository';
 
 let questionRepository: InMemoryQuestionRepository;
 let questionAttachmentsRepository: InMemoryQestionAttachmentsRepository;
 let deleteQuestionUseCase: DeleteQuestionUseCase;
+let studentsRepository: InMemoryStudentsRepository;
+let attachmentRepository: InMemoryAttachmentsRepository;
 
 describe('Delete Question', () => {
 	beforeEach(() => {
+		studentsRepository = new InMemoryStudentsRepository();
+		attachmentRepository = new InMemoryAttachmentsRepository();
 		questionAttachmentsRepository = new InMemoryQestionAttachmentsRepository();
-		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository);
+		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository, attachmentRepository, studentsRepository);
 		deleteQuestionUseCase = new DeleteQuestionUseCase(questionRepository);
 	});
 

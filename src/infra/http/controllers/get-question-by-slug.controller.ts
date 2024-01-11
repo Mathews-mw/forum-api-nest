@@ -1,15 +1,15 @@
 import { BadRequestException, Controller, Get, Param } from '@nestjs/common';
 
-import { QuestionPresenter } from '../presenters/question-presenter';
+import { QuestionDetailsPresenter } from '../presenters/question-details-presenter';
 import { GetQuestionBySlugUseCase } from '@/domain/forum/application/use-cases/get-question-by-slug';
 
 @Controller('/questions/:slug')
 export class GetQuestionBySlugController {
-	constructor(private fetchRecenteQuestionsUseCase: GetQuestionBySlugUseCase) {}
+	constructor(private getQuestionBySlugUseCase: GetQuestionBySlugUseCase) {}
 
 	@Get()
 	async handle(@Param('slug') slug: string) {
-		const result = await this.fetchRecenteQuestionsUseCase.execute({
+		const result = await this.getQuestionBySlugUseCase.execute({
 			slug,
 		});
 
@@ -17,6 +17,6 @@ export class GetQuestionBySlugController {
 			throw new BadRequestException();
 		}
 
-		return { questions: QuestionPresenter.toHTTP(result.value.question) };
+		return { questions: QuestionDetailsPresenter.toHTTP(result.value.question) };
 	}
 }

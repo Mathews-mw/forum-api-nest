@@ -6,6 +6,8 @@ import { PaginationParams } from '@/core/repositories/pagination-params';
 import { PrismaQuestionMapper } from '../mappers/prisma-question-mapper';
 import { IQuestionRepository } from '@/domain/forum/application/repositories/implementations/IQuestionRepository';
 import { IQuestionAttachmentsRepository } from '@/domain/forum/application/repositories/implementations/IQuestionAttchmentsRepository';
+import { QuestionDetails } from '@/domain/forum/enterprise/entities/value-objects/question-details';
+import { PrismaQuestionDetailsMapper } from '../mappers/prisma-question-details-mapper';
 
 @Injectable()
 export class PrismaQuestionRepository implements IQuestionRepository {
@@ -75,6 +77,24 @@ export class PrismaQuestionRepository implements IQuestionRepository {
 		}
 
 		return PrismaQuestionMapper.toDomain(question);
+	}
+
+	async findDetailsBySlug(slug: string): Promise<QuestionDetails | null> {
+		const question = await this.prisma.question.findUnique({
+			where: {
+				slug,
+			},
+			include: {
+				author: true,
+				attachments: true,
+			},
+		});
+
+		if (!question) {
+			return null;
+		}
+
+		return PrismaQuestionDetailsMapper.toDomain(question);
 	}
 
 	async findManyRecent({ page }: PaginationParams): Promise<Question[]> {

@@ -2,13 +2,16 @@ import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 import { makeAnswerComments } from '../factories/make-answer-comments';
 import { DeleteAnswerCommentUseCase } from '@/domain/forum/application/use-cases/delete-answer-question';
 import { InMemmoryAnswerCommentsRepository } from '../in-memory/in-memmory-answer-comment-repository';
+import { InMemoryStudentsRepository } from '../in-memory/in-memory-students-repository';
 
 let deleteCommentAnswerUseCase: DeleteAnswerCommentUseCase;
 let answerCommentRepository: InMemmoryAnswerCommentsRepository;
+let studentsRepository: InMemoryStudentsRepository;
 
 describe('Delete comment answer', () => {
 	beforeEach(() => {
-		answerCommentRepository = new InMemmoryAnswerCommentsRepository();
+		studentsRepository = new InMemoryStudentsRepository();
+		answerCommentRepository = new InMemmoryAnswerCommentsRepository(studentsRepository);
 		deleteCommentAnswerUseCase = new DeleteAnswerCommentUseCase(answerCommentRepository);
 	});
 

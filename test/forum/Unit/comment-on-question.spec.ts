@@ -3,17 +3,23 @@ import { InMemoryQuestionRepository } from '../in-memory/in-memory-question-repo
 import { InMemmoryQuestionCommentsRepository } from '../in-memory/in-memmory-question-comments-repository';
 import { CommentOnQuestionUseCase } from '@/domain/forum/application/use-cases/comment-on-question-use-case';
 import { InMemoryQestionAttachmentsRepository } from '../in-memory/in-memory-question-attachments-repository';
+import { InMemoryStudentsRepository } from '../in-memory/in-memory-students-repository';
+import { InMemoryAttachmentsRepository } from '../in-memory/in-memmory-attachments-repository';
 
 let questionRepository: InMemoryQuestionRepository;
 let commentQuestionUseCase: CommentOnQuestionUseCase;
+let studentsRepository: InMemoryStudentsRepository;
+let attachmentRepository: InMemoryAttachmentsRepository;
 let questionCommentRepository: InMemmoryQuestionCommentsRepository;
 let questionAttachmentsRepository: InMemoryQestionAttachmentsRepository;
 
 describe('Comment on Question', () => {
 	beforeEach(() => {
-		questionCommentRepository = new InMemmoryQuestionCommentsRepository();
+		attachmentRepository = new InMemoryAttachmentsRepository();
+		studentsRepository = new InMemoryStudentsRepository();
+		questionCommentRepository = new InMemmoryQuestionCommentsRepository(studentsRepository);
 		questionAttachmentsRepository = new InMemoryQestionAttachmentsRepository();
-		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository);
+		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository, attachmentRepository, studentsRepository);
 		commentQuestionUseCase = new CommentOnQuestionUseCase(questionRepository, questionCommentRepository);
 	});
 

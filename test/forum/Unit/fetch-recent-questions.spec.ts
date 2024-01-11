@@ -2,15 +2,21 @@ import { makeQuestion } from '../factories/make-question';
 import { InMemoryQuestionRepository } from '../in-memory/in-memory-question-repository';
 import { InMemoryQestionAttachmentsRepository } from '../in-memory/in-memory-question-attachments-repository';
 import { FetchRecentQuestionsUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions-use-case';
+import { InMemoryStudentsRepository } from '../in-memory/in-memory-students-repository';
+import { InMemoryAttachmentsRepository } from '../in-memory/in-memmory-attachments-repository';
 
 let questionRepository: InMemoryQuestionRepository;
 let fetchRecentQuestionsUseCase: FetchRecentQuestionsUseCase;
 let questionAttachmentsRepository: InMemoryQestionAttachmentsRepository;
+let studentsRepository: InMemoryStudentsRepository;
+let attachmentRepository: InMemoryAttachmentsRepository;
 
 describe('Fetch Recente Questions', () => {
 	beforeEach(() => {
+		studentsRepository = new InMemoryStudentsRepository();
+		attachmentRepository = new InMemoryAttachmentsRepository();
 		questionAttachmentsRepository = new InMemoryQestionAttachmentsRepository();
-		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository);
+		questionRepository = new InMemoryQuestionRepository(questionAttachmentsRepository, attachmentRepository, studentsRepository);
 		fetchRecentQuestionsUseCase = new FetchRecentQuestionsUseCase(questionRepository);
 	});
 
