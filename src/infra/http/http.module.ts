@@ -16,6 +16,7 @@ import { AuthenticateStudentUseCase } from '@/domain/forum/application/use-cases
 import { CommentOnAnswerUseCase } from '@/domain/forum/application/use-cases/comment-on-anwer-use-case';
 import { DeleteAnswerCommentUseCase } from '@/domain/forum/application/use-cases/delete-answer-comment';
 import { FetchAnswerCommentsUseCase } from '@/domain/forum/application/use-cases/fetch-answer-comments';
+import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification';
 import { DeleteQuestionCommentUseCase } from '@/domain/forum/application/use-cases/delete-question-comment';
 import { FetchQuestionCommentsUseCase } from '@/domain/forum/application/use-cases/fetch-question-comments';
 import { CommentOnQuestionUseCase } from '@/domain/forum/application/use-cases/comment-on-question-use-case';
@@ -33,6 +34,7 @@ import { CreateQuestionController } from './controllers/create-question.controll
 import { DeleteQuestionController } from './controllers/delete-question.controller';
 import { CommentOnAnswerController } from './controllers/comment-on-answer.controller';
 import { UploadAttachmentController } from './controllers/upload-attachment.controller';
+import { ReadNotificationController } from './controllers/read-notification.controller';
 import { CommentOnquestionController } from './controllers/comment-on-question.controller';
 import { GetQuestionBySlugController } from './controllers/get-question-by-slug.controller';
 import { DeleteAnswerCommentController } from './controllers/delete-answer-comment.controller';
@@ -65,6 +67,7 @@ import { ChooseQuestionBestAnswerController } from './controllers/choose-questio
 		DeleteAnswerCommentController,
 		FetchAnswerCommentsController,
 		UploadAttachmentController,
+		ReadNotificationController,
 	],
 	providers: [
 		RegisterStudentUseCase,
@@ -85,6 +88,7 @@ import { ChooseQuestionBestAnswerController } from './controllers/choose-questio
 		CommentOnAnswerUseCase,
 		DeleteAnswerCommentUseCase,
 		FetchAnswerCommentsUseCase,
+		ReadNotificationUseCase,
 	],
 })
 export class HttpModule {}

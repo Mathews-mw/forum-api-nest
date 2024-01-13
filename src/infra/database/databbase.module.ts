@@ -5,6 +5,7 @@ import { PrismaAnswerRepository } from './prisma/repositories/prisma-answer-repo
 import { PrismaStudentRepository } from './prisma/repositories/prisma-student-repository';
 import { PrismaQuestionRepository } from './prisma/repositories/prisma-question-repository';
 import { PrismaAttachmentsRepository } from './prisma/repositories/prisma-attachment-repository';
+import { PrismaNotificationsRepository } from './prisma/repositories/prisma-notifications-repository';
 import { PrismaAnswerCommentsRepository } from './prisma/repositories/prisma-answer-comment-repository';
 import { PrismaQuestionCommentsRepository } from './prisma/repositories/prisma-question-comments-repository';
 import { IAnswerRepository } from '@/domain/forum/application/repositories/implementations/IAnswerRepository';
@@ -17,6 +18,7 @@ import { IAnswerCommentsRepository } from '@/domain/forum/application/repositori
 import { IQuestionCommentsRepository } from '@/domain/forum/application/repositories/implementations/IQuestionCommentsRepository';
 import { IAnswerAttchmentsRepository } from '@/domain/forum/application/repositories/implementations/IAnswerAttachmentsRepository';
 import { IQuestionAttachmentsRepository } from '@/domain/forum/application/repositories/implementations/IQuestionAttchmentsRepository';
+import { INotificaticationsRepository } from '@/domain/notification/application/repositories/implementations/INotificationsRepository';
 
 @Module({
 	providers: [
@@ -35,6 +37,10 @@ import { IQuestionAttachmentsRepository } from '@/domain/forum/application/repos
 		{ provide: IAnswerAttchmentsRepository, useClass: PrismaAnswerAttachmentsRepository },
 		{ provide: IQuestionAttachmentsRepository, useClass: PrismaQestionAttachmentsRepository },
 		{ provide: IAttachmentRepository, useClass: PrismaAttachmentsRepository },
+		{
+			provide: INotificaticationsRepository,
+			useClass: PrismaNotificationsRepository,
+		},
 	],
 	exports: [
 		PrismaService,
@@ -46,6 +52,7 @@ import { IQuestionAttachmentsRepository } from '@/domain/forum/application/repos
 		IAnswerAttchmentsRepository,
 		IQuestionAttachmentsRepository,
 		IAttachmentRepository,
+		INotificaticationsRepository,
 	],
 })
 export class DatabaseModule {}

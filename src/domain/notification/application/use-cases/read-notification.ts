@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common';
+
 import { Either, failure, success } from '@/core/either';
 import { NotallowedError } from '@/core/errors/not-allowed-error';
 import { Notification } from '../../enterprise/entities/notification';
@@ -16,6 +18,7 @@ type ReadNotificationUseCaseResponse = Either<
 	}
 >;
 
+@Injectable()
 export class ReadNotificationUseCase {
 	constructor(private notificationRepository: INotificaticationsRepository) {}
 

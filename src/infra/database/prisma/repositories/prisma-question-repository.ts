@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '../prisma.service';
+import { DomainEvents } from '@/core/events/domain-events';
 import { Question } from '@/domain/forum/enterprise/entities/question';
 import { PaginationParams } from '@/core/repositories/pagination-params';
 import { PrismaQuestionMapper } from '../mappers/prisma-question-mapper';
+import { PrismaQuestionDetailsMapper } from '../mappers/prisma-question-details-mapper';
+import { QuestionDetails } from '@/domain/forum/enterprise/entities/value-objects/question-details';
 import { IQuestionRepository } from '@/domain/forum/application/repositories/implementations/IQuestionRepository';
 import { IQuestionAttachmentsRepository } from '@/domain/forum/application/repositories/implementations/IQuestionAttchmentsRepository';
-import { QuestionDetails } from '@/domain/forum/enterprise/entities/value-objects/question-details';
-import { PrismaQuestionDetailsMapper } from '../mappers/prisma-question-details-mapper';
 
 @Injectable()
 export class PrismaQuestionRepository implements IQuestionRepository {
@@ -24,6 +25,8 @@ export class PrismaQuestionRepository implements IQuestionRepository {
 		});
 
 		await this.questionAttachmentsRepository.createMany(question.attachments.getItems());
+
+		DomainEvents.dispatchEventsForAggregate(question.id);
 	}
 
 	async save(question: Question): Promise<void> {
@@ -39,6 +42,8 @@ export class PrismaQuestionRepository implements IQuestionRepository {
 			this.questionAttachmentsRepository.createMany(question.attachments.getNewItems()),
 			this.questionAttachmentsRepository.createMany(question.attachments.getRemovedItems()),
 		]);
+
+		DomainEvents.dispatchEventsForAggregate(question.id);
 	}
 
 	async delete(question: Question): Promise<void> {
