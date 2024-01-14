@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 
+import { CacheModule } from '../cache/cache.module';
+
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaAnswerRepository } from './prisma/repositories/prisma-answer-repository';
 import { PrismaStudentRepository } from './prisma/repositories/prisma-student-repository';
@@ -8,11 +10,12 @@ import { PrismaAttachmentsRepository } from './prisma/repositories/prisma-attach
 import { PrismaNotificationsRepository } from './prisma/repositories/prisma-notifications-repository';
 import { PrismaAnswerCommentsRepository } from './prisma/repositories/prisma-answer-comment-repository';
 import { PrismaQuestionCommentsRepository } from './prisma/repositories/prisma-question-comments-repository';
-import { IAnswerRepository } from '@/domain/forum/application/repositories/implementations/IAnswerRepository';
 import { PrismaAnswerAttachmentsRepository } from './prisma/repositories/prisma-answer-attachments-repository';
+import { PrismaQestionAttachmentsRepository } from './prisma/repositories/prisma-question-attachments-repository';
+
+import { IAnswerRepository } from '@/domain/forum/application/repositories/implementations/IAnswerRepository';
 import { IStudentRepository } from '@/domain/forum/application/repositories/implementations/IStudendtRepository';
 import { IQuestionRepository } from '@/domain/forum/application/repositories/implementations/IQuestionRepository';
-import { PrismaQestionAttachmentsRepository } from './prisma/repositories/prisma-question-attachments-repository';
 import { IAttachmentRepository } from '@/domain/forum/application/repositories/implementations/IAttachmentRepository';
 import { IAnswerCommentsRepository } from '@/domain/forum/application/repositories/implementations/IAnswerCommentsRepository';
 import { IQuestionCommentsRepository } from '@/domain/forum/application/repositories/implementations/IQuestionCommentsRepository';
@@ -21,6 +24,7 @@ import { IQuestionAttachmentsRepository } from '@/domain/forum/application/repos
 import { INotificaticationsRepository } from '@/domain/notification/application/repositories/implementations/INotificationsRepository';
 
 @Module({
+	imports: [CacheModule],
 	providers: [
 		PrismaService,
 		{ provide: IAnswerRepository, useClass: PrismaAnswerRepository },

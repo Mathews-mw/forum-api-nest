@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '../prisma.service';
 import { DomainEvents } from '@/core/events/domain-events';
+import { ICacheRepository } from '@/infra/cache/ICacheRepository';
 import { Question } from '@/domain/forum/enterprise/entities/question';
 import { PaginationParams } from '@/core/repositories/pagination-params';
 import { PrismaQuestionMapper } from '../mappers/prisma-question-mapper';
@@ -14,6 +15,7 @@ import { IQuestionAttachmentsRepository } from '@/domain/forum/application/repos
 export class PrismaQuestionRepository implements IQuestionRepository {
 	constructor(
 		private prisma: PrismaService,
+		private cacheRepository: ICacheRepository,
 		private questionAttachmentsRepository: IQuestionAttachmentsRepository
 	) {}
 
@@ -41,6 +43,7 @@ export class PrismaQuestionRepository implements IQuestionRepository {
 			}),
 			this.questionAttachmentsRepository.createMany(question.attachments.getNewItems()),
 			this.questionAttachmentsRepository.createMany(question.attachments.getRemovedItems()),
+			this.cacheRepository.delete(`question:${data.slug}:details`),
 		]);
 
 		DomainEvents.dispatchEventsForAggregate(question.id);
@@ -85,6 +88,14 @@ export class PrismaQuestionRepository implements IQuestionRepository {
 	}
 
 	async findDetailsBySlug(slug: string): Promise<QuestionDetails | null> {
+		const cacheHit = await this.cacheRepository.get(`question:${slug}:details`);
+
+		if (cacheHit) {
+			const cacheData = JSON.parse(cacheHit);
+
+			return cacheData;
+		}
+
 		const question = await this.prisma.question.findUnique({
 			where: {
 				slug,
@@ -99,7 +110,11 @@ export class PrismaQuestionRepository implements IQuestionRepository {
 			return null;
 		}
 
-		return PrismaQuestionDetailsMapper.toDomain(question);
+		const questionDetails = PrismaQuestionDetailsMapper.toDomain(question);
+
+		await this.cacheRepository.set(`question:${slug}:details`, JSON.stringify(questionDetails));
+
+		return questionDetails;
 	}
 
 	async findManyRecent({ page }: PaginationParams): Promise<Question[]> {
